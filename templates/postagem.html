@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>ECOSPERE - Rede Social Sustentável</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+        /* Fundo com imagem e blur */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('images/paisagem.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Criação da camada de blur */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        /* Conteúdo da página */
+        #content {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        /* Estilo para novos posts e conteúdo */
+        .post-form {
+            margin-bottom: 30px;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-post {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Estilos adicionais */
+        h2 {
+            text-align: center;
+        }
+
+        .post img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .comment-section {
+            margin-top: 10px;
+        }
+
+        .comment {
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .submit-comment {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Conteúdo Principal -->
+    <div id="content">
+        <div class="post-form">
+            <h2>Nova Publicação</h2>
+            <textarea id="new-post-content" rows="4" placeholder="Compartilhe suas ideias sustentáveis..."></textarea>
+            <input type="file" id="new-post-image" accept="image/*">
+            <button id="submit-post">Publicar</button>
+        </div>
+
+        <div id="posts-section">
+            <!-- Posts gerados dinamicamente aparecerão aqui -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Função para obter postagens do localStorage
+        function getPosts() {
+            return JSON.parse(localStorage.getItem('posts')) || [];
+        }
+
+        // Função para salvar postagens no localStorage
+        function savePosts(posts) {
+            localStorage.setItem('posts', JSON.stringify(posts));
+        }
+
+        // Função para adicionar novos posts
+        document.getElementById('submit-post').addEventListener('click', function() {
+            const content = document.getElementById('new-post-content').value;
+            const imageInput = document.getElementById('new-post-image');
+            const reader = new FileReader();
+
+            // Verifica se há imagem para carregar
+            if (imageInput.files[0]) {
+                reader.onload = function(event) {
+                    const imageSrc = event.target.result;
+                    addPost(content, imageSrc); // Adiciona o post com a imagem
+                };
+                reader.readAsDataURL(imageInput.files[0]); // Carrega a imagem
+            } else {
+                addPost(content, null); // Adiciona o post sem imagem
+            }
+        });
+
+        // Função para adicionar posts ao array
+        function addPost(content, image) {
+            if (content) {
+                const posts = getPosts();
+                posts.push({ content: content, image: image, likes: 0, comments: [], commentsVisible: false });
+                savePosts(posts); // Salva os posts no localStorage
+                document.getElementById('new-post-content').value = ''; // Limpa o campo de postagem
+                document.getElementById('new-post-image').value = '';  // Limpa o campo de imagem
+                // Redireciona para a página de feedback
+                window.location.href = 'novofeed.html';
+            }
+        }
+    </script>
+</body>
+</html>

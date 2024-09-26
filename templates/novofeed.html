@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Feed de Postagens - ECOSPERE</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <a href="login.html" class="logout-button">Sair</a>
+    <!-- Adicionando Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* Estilo do corpo da página */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background: url('images/paisagem.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* Camada de fundo com desfoque */
+        .background-blur {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3); /* Cor de fundo com transparência para o blur */
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        /* Layout com sidebar e conteúdo principal */
+        .container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            height: calc(100% - 40px); /* Ajusta a altura para deixar espaço para o rodapé */
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: rgba(255, 255, 255, 0.8); /* Cor de fundo clara com transparência */
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar img.logo {
+            width: 80px; /* Tamanho do logo, ajuste conforme necessário */
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .sidebar img.menu-image {
+            width: 250px; /* Ajuste o tamanho da imagem do menu conforme necessário */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .sidebar a.button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sidebar a.button:hover {
+            background-color: #218838;
+        }
+
+        .search-container {
+            margin-top: 20px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container input[type="text"] {
+            width: calc(100% - 40px); /* Ajusta a largura para acomodar o ícone */
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-right: 10px; /* Espaçamento entre o campo e o ícone */
+        }
+
+        .search-container i {
+            font-size: 18px;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .search-container i:hover {
+            color: #0056b3;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Cor de fundo clara com transparência */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .post {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+
+        .post img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .comment-section {
+            margin-top: 10px;
+        }
+
+        .comment {
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .submit-comment {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .submit-comment:disabled {
+            background-color: #6c757d;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .delete-post {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .history-section {
+            margin-top: 30px;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Estilo do rodapé */
+        .footer {
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-top: 1px solid #ddd;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+        }
+
+        .footer p {
+            margin: 0;
+            color: #333;
+        }
+
+        .logout-button {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-blur"></div>
+    <div class="container">
+        <div class="sidebar">
+            <img src="images/logo letra preta.png" alt="Imagem do Menu" class="menu-image" /> <!-- Adicione o caminho correto para a imagem do menu -->
+            <h2>Menu</h2>
+            <a href="http://127.0.0.1:5500/postagem.html" class="button">Nova Postagem</a>
+            <a href="feedback.html" class="button">Últimas Publicações</a>
+            <a href="sobremim.html" class="button">Quem Somos?</a>
+            
+            <!-- Caixa de pesquisa com ícone de lupa -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Pesquisar...">
+                <i class="fas fa-search" onclick="searchPosts()"></i>
+            </div>
+            
+            <a href="login.html" class="logout-button">Sair</a>
+        </div>
+
+        <div class="main-content">
+            <h2>Feedback de Postagens</h2>
+            <div id="posts-section">
+                <!-- Posts gerados dinamicamente aparecerão aqui -->
+            </div>
+
+            <div class="history-section">
+                <h2>Histórico de Postagens</h2>
+                <div id="history-section">
+                    <!-- Histórico de postagens será inserido aqui -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <p>&copy; 2024 ECOSPERE. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Função para salvar postagens no localStorage
+        function savePosts(posts) {
+            localStorage.setItem('posts', JSON.stringify(posts));
+        }
+
+        // Função para obter postagens do localStorage
+        function getPosts() {
+            return JSON.parse(localStorage.getItem('posts')) || [];
+        }
+
+        // Função para renderizar posts
+        function renderPosts() {
+            const postsSection = document.getElementById('posts-section');
+            postsSection.innerHTML = ''; // Limpa a área de posts
+
+            const posts = getPosts();
+
+            posts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <h3>Post de Usuário ${index + 1}</h3>
+                        <span>${new Date(post.timestamp).toLocaleDateString()}</span>
+                    </div>
+                    <p>${post.content}</p>
+                    ${post.image ? `<img src="${post.image}" alt="Imagem postada">` : ''}
+                    <div class="post-actions">
+                        <button id="delete-post-${index}" class="delete-post" onclick="deletePost(${index})">Excluir</button>
+                    </div>
+                    <div class="comment-section">
+                        <input type="text" id="comment-input-${index}" placeholder="Adicionar um comentário...">
+                        <button class="submit-comment" onclick="addComment(${index})">Comentar</button>
+                        <div id="comments-${index}">
+                            ${post.comments.map(comment => `<div class="comment">${comment}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+
+                postsSection.appendChild(postElement);
+            });
+        }
+
+        // Função para adicionar um comentário
+        function addComment(postIndex) {
+            const commentInput = document.getElementById(`comment-input-${postIndex}`);
+            const comment = commentInput.value;
+            if (comment.trim()) {
+                const posts = getPosts();
+                posts[postIndex].comments = posts[postIndex].comments || [];
+                posts[postIndex].comments.push(comment);
+                savePosts(posts);
+                renderPosts();
+                commentInput.value = '';
+            }
+        }
+
+        // Função para excluir um post
+        function deletePost(postIndex) {
+            const posts = getPosts();
+            posts.splice(postIndex, 1);
+            savePosts(posts);
+            renderPosts();
+        }
+
+        // Função de pesquisa (simulada)
+        function searchPosts() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const posts = getPosts();
+            const filteredPosts = posts.filter(post => post.content.toLowerCase().includes(searchInput));
+            const postsSection = document.getElementById('posts-section');
+            postsSection.innerHTML = '';
+
+            filteredPosts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <h3>Post de Usuário ${index + 1}</h3>
+                        <span>${new Date(post.timestamp).toLocaleDateString()}</span>
+                    </div>
+                    <p>${post.content}</p>
+                    ${post.image ? `<img src="${post.image}" alt="Imagem postada">` : ''}
+                    <div class="post-actions">
+                        <button id="delete-post-${index}" class="delete-post" onclick="deletePost(${index})">Excluir</button>
+                    </div>
+                    <div class="comment-section">
+                        <input type="text" id="comment-input-${index}" placeholder="Adicionar um comentário...">
+                        <button class="submit-comment" onclick="addComment(${index})">Comentar</button>
+                        <div id="comments-${index}">
+                            ${post.comments ? post.comments.map(comment => `<div class="comment">${comment}</div>`).join('') : ''}
+                        </div>
+                    </div>
+                `;
+
+                postsSection.appendChild(postElement);
+            });
+        }
+
+        // Renderiza os posts ao carregar a página
+        document.addEventListener('DOMContentLoaded', renderPosts);
+    </script>
+</body>
+</html>
